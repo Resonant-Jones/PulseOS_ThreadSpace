@@ -1,0 +1,273 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 6.1 effective-5.10 (swiftlang-6.1.0.110.21 clang-1700.0.13.3)
+// swift-module-flags: -target arm64-apple-ios15.0-macabi -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -enable-experimental-feature DebugDescriptionMacro -enable-bare-slash-regex -module-name LeapSDK
+// swift-module-flags-ignorable: -no-verify-emitted-module-interface -interface-compiler-version 6.1
+import Foundation
+@_exported import LeapSDK
+import Swift
+import _Concurrency
+import _StringProcessing
+import _SwiftConcurrencyShims
+public enum ChatMessageCodingKeys : Swift.String, Swift.CodingKey {
+  case role
+  case content
+  case reasoningContent
+  public init?(rawValue: Swift.String)
+  public init?(stringValue: Swift.String)
+  public init?(intValue: Swift.Int)
+  public typealias RawValue = Swift.String
+  public var intValue: Swift.Int? {
+    get
+  }
+  public var rawValue: Swift.String {
+    get
+  }
+  public var stringValue: Swift.String {
+    get
+  }
+}
+extension LeapSDK.ChatMessage : Swift.Codable {
+  public init(from decoder: any Swift.Decoder) throws
+  public func encode(to encoder: any Swift.Encoder) throws
+}
+public enum ChatMessageRole : Swift.String {
+  case user
+  case system
+  case assistant
+  public init?(rawValue: Swift.String)
+  public typealias RawValue = Swift.String
+  public var rawValue: Swift.String {
+    get
+  }
+}
+public struct ChatMessage {
+  public var role: LeapSDK.ChatMessageRole
+  public var content: [LeapSDK.ChatMessageContent]
+  public var reasoningContent: Swift.String?
+  public init(role: LeapSDK.ChatMessageRole, content: [LeapSDK.ChatMessageContent], reasoningContent: Swift.String? = nil)
+  public init(from json: [Swift.String : Any]) throws
+}
+public enum ChatMessageContentCodingKeys : Swift.String, Swift.CodingKey {
+  case type
+  case text
+  public init?(rawValue: Swift.String)
+  public init?(stringValue: Swift.String)
+  public init?(intValue: Swift.Int)
+  public typealias RawValue = Swift.String
+  public var intValue: Swift.Int? {
+    get
+  }
+  public var rawValue: Swift.String {
+    get
+  }
+  public var stringValue: Swift.String {
+    get
+  }
+}
+extension LeapSDK.ChatMessageContent : Swift.Codable {
+  public init(from decoder: any Swift.Decoder) throws
+  public func encode(to encoder: any Swift.Encoder) throws
+}
+public enum ChatMessageContent {
+  case text(Swift.String)
+  public init(from json: [Swift.String : Any]) throws
+}
+public class Conversation {
+  final public let modelRunner: any LeapSDK.ModelRunner
+  public var history: [LeapSDK.ChatMessage] {
+    get
+  }
+  public var isGenerating: Swift.Bool {
+    get
+  }
+  public init(modelRunner: any LeapSDK.ModelRunner, history: [LeapSDK.ChatMessage])
+  public func generateResponse(userTextMessage: Swift.String) -> _Concurrency.AsyncStream<LeapSDK.MessageResponse>
+  @discardableResult
+  public func generateResponse(message: LeapSDK.ChatMessage, onResponse: @escaping (LeapSDK.MessageResponse) -> Swift.Void) -> (any LeapSDK.GenerationHandler)?
+  public func generateResponse(message: LeapSDK.ChatMessage) -> _Concurrency.AsyncStream<LeapSDK.MessageResponse>
+  public func exportToJSON() throws -> [[Swift.String : Any]]
+  @objc deinit
+}
+public protocol GenerationHandler {
+  func stop()
+}
+public struct Leap {
+  public static func load(url: Foundation.URL) async throws -> any LeapSDK.ModelRunner
+}
+public enum LeapError : Swift.Error {
+  case loadModelFailure
+  case modelLoadingFailure(Swift.String, (any Swift.Error)?)
+  case generationFailure(Swift.String, (any Swift.Error)?)
+  case serializationFailure(Swift.String, (any Swift.Error)?)
+}
+public enum LiquidError : Swift.Int32, Swift.Error, Foundation.LocalizedError {
+  case success
+  case loadError
+  case invalidArgument
+  case invalidBufferSize
+  case exceedContextLength
+  case internalError
+  case notFound
+  public var errorDescription: Swift.String? {
+    get
+  }
+  public init?(rawValue: Swift.Int32)
+  public typealias RawValue = Swift.Int32
+  public var rawValue: Swift.Int32 {
+    get
+  }
+}
+public class LiquidInferenceEngine {
+  final public let bundlePath: Swift.String
+  public static func initializeLiquid()
+  public static func setupLogging(level: LeapSDK.LiquidLogLevel, callback: @escaping (LeapSDK.LiquidLogLevel, Swift.String, Swift.String) -> Swift.Void)
+  public init(options: LeapSDK.LiquidInferenceEngineOptions) throws
+  convenience public init(bundlePath: Swift.String) throws
+  @objc deinit
+  public func getState() throws -> LeapSDK.LiquidEngineState
+  public func reset() throws
+  public func stop() throws
+  public func getModelId() throws -> Swift.String
+  public func getBundleConfig() throws -> Swift.String
+  public func validate(messages: [LeapSDK.LiquidMessage]) throws -> Swift.String?
+  public func getPromptTokensSize(messages: [LeapSDK.LiquidMessage], addBosToken: Swift.Bool = true) throws -> Swift.Int
+  public func generateForPrompt(prompt: Swift.String, options: LeapSDK.LiquidGenerateOptions = LiquidGenerateOptions(), onToken: @escaping (Swift.String) -> Swift.Void, onComplete: @escaping (Swift.Result<Swift.Void, any Swift.Error>) -> Swift.Void)
+  public func generate(messages: [LeapSDK.LiquidMessage], options: LeapSDK.LiquidGenerateOptions = LiquidGenerateOptions(), onToken: @escaping (Swift.String) -> Swift.Void, onComplete: @escaping (Swift.Result<Swift.Void, any Swift.Error>) -> Swift.Void)
+  public static func getBundleCompatibilityIDs() -> [Swift.String]
+}
+public class LiquidInferenceEngineRunner : LeapSDK.ModelRunner {
+  public init(path: Swift.String) async throws
+  public func createConversation(systemPrompt: Swift.String?) -> LeapSDK.Conversation
+  public func createConversationFromHistory(history: [LeapSDK.ChatMessage]) -> LeapSDK.Conversation
+  public func generateResponse(conversation: LeapSDK.Conversation, onResponseCallback: @escaping (LeapSDK.MessageResponse) -> Swift.Void) -> any LeapSDK.GenerationHandler
+  public func unload() async
+  public func getLatestStats() -> LeapSDK.LiquidGenerationStats?
+  public func getPromptTokensSize(messages: [LeapSDK.ChatMessage], addBosToken: Swift.Bool = true) throws -> Swift.Int
+  @objc deinit
+}
+public enum LiquidLogLevel : Swift.Int32 {
+  case debug
+  case info
+  case warn
+  case error
+  public init?(rawValue: Swift.Int32)
+  public typealias RawValue = Swift.Int32
+  public var rawValue: Swift.Int32 {
+    get
+  }
+}
+public enum LiquidMessageContentType : Swift.Int32 {
+  case string
+  case wav
+  case jpeg
+  public init?(rawValue: Swift.Int32)
+  public typealias RawValue = Swift.Int32
+  public var rawValue: Swift.Int32 {
+    get
+  }
+}
+public struct LiquidMessageContent {
+  public let type: LeapSDK.LiquidMessageContentType
+  public let data: Foundation.Data
+  public init(text: Swift.String)
+  public init(wav: Foundation.Data)
+  public init(jpeg: Foundation.Data)
+}
+public struct LiquidMessage {
+  public let role: Swift.String
+  public let content: [LeapSDK.LiquidMessageContent]
+  public init(role: Swift.String, content: [LeapSDK.LiquidMessageContent])
+  public init(role: Swift.String, text: Swift.String)
+}
+public struct LiquidCacheOptions {
+  public let path: Swift.String
+  public let maxEntries: Swift.Int
+  public init(path: Swift.String, maxEntries: Swift.Int)
+}
+public struct LiquidInferenceEngineOptions {
+  public let bundlePath: Swift.String
+  public let cacheOptions: LeapSDK.LiquidCacheOptions?
+  public let cpuThreads: Swift.UInt32?
+  public init(bundlePath: Swift.String, cacheOptions: LeapSDK.LiquidCacheOptions? = nil, cpuThreads: Swift.UInt32? = nil)
+}
+public struct LiquidEngineState {
+  public let currentPosition: Swift.Int64
+  public let maxSequenceLength: Swift.Int64
+}
+public struct LiquidSamplerParams {
+  public let temperature: Swift.Float?
+  public let topP: Swift.Float?
+  public let minP: Swift.Float?
+  public let repetitionPenalty: Swift.Float?
+  public let rngSeed: Swift.UInt64?
+  public init(temperature: Swift.Float? = nil, topP: Swift.Float? = nil, minP: Swift.Float? = nil, repetitionPenalty: Swift.Float? = nil, rngSeed: Swift.UInt64? = nil)
+}
+public enum LiquidConstraintType : Swift.Int32 {
+  case regex
+  case jsonSchema
+  case twoStepDSL
+  public init?(rawValue: Swift.Int32)
+  public typealias RawValue = Swift.Int32
+  public var rawValue: Swift.Int32 {
+    get
+  }
+}
+public struct LiquidConstraint {
+  public let type: LeapSDK.LiquidConstraintType
+  public let config: Swift.String
+  public init(type: LeapSDK.LiquidConstraintType, config: Swift.String)
+}
+public struct LiquidGenerationStats {
+  public let tokenPerSecond: Swift.Float
+}
+public struct LiquidGenerateOptions {
+  public let resetHistory: Swift.Bool
+  public let sequenceLength: Swift.UInt32?
+  public let samplerParams: LeapSDK.LiquidSamplerParams
+  public let constraint: LeapSDK.LiquidConstraint?
+  public let onStats: ((LeapSDK.LiquidGenerationStats) -> Swift.Void)?
+  public init(resetHistory: Swift.Bool = false, sequenceLength: Swift.UInt32? = nil, samplerParams: LeapSDK.LiquidSamplerParams = LiquidSamplerParams(), constraint: LeapSDK.LiquidConstraint? = nil, onStats: ((LeapSDK.LiquidGenerationStats) -> Swift.Void)? = nil)
+}
+public enum GenerationFinishReason {
+  case stop
+  case exceed_context
+  public static func == (a: LeapSDK.GenerationFinishReason, b: LeapSDK.GenerationFinishReason) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+public enum MessageResponse {
+  case chunk(Swift.String)
+  case reasoningChunk(Swift.String)
+  case complete(Swift.String, LeapSDK.GenerationFinishReason)
+}
+public protocol ModelRunner {
+  func createConversation(systemPrompt: Swift.String?) -> LeapSDK.Conversation
+  func createConversationFromHistory(history: [LeapSDK.ChatMessage]) -> LeapSDK.Conversation
+  func unload() async
+  func generateResponse(conversation: LeapSDK.Conversation, onResponseCallback: @escaping (LeapSDK.MessageResponse) -> Swift.Void) -> any LeapSDK.GenerationHandler
+}
+extension LeapSDK.ChatMessageCodingKeys : Swift.Equatable {}
+extension LeapSDK.ChatMessageCodingKeys : Swift.Hashable {}
+extension LeapSDK.ChatMessageCodingKeys : Swift.RawRepresentable {}
+extension LeapSDK.ChatMessageRole : Swift.Equatable {}
+extension LeapSDK.ChatMessageRole : Swift.Hashable {}
+extension LeapSDK.ChatMessageRole : Swift.RawRepresentable {}
+extension LeapSDK.ChatMessageContentCodingKeys : Swift.Equatable {}
+extension LeapSDK.ChatMessageContentCodingKeys : Swift.Hashable {}
+extension LeapSDK.ChatMessageContentCodingKeys : Swift.RawRepresentable {}
+extension LeapSDK.LiquidError : Swift.Equatable {}
+extension LeapSDK.LiquidError : Swift.Hashable {}
+extension LeapSDK.LiquidError : Swift.RawRepresentable {}
+extension LeapSDK.LiquidLogLevel : Swift.Equatable {}
+extension LeapSDK.LiquidLogLevel : Swift.Hashable {}
+extension LeapSDK.LiquidLogLevel : Swift.RawRepresentable {}
+extension LeapSDK.LiquidMessageContentType : Swift.Equatable {}
+extension LeapSDK.LiquidMessageContentType : Swift.Hashable {}
+extension LeapSDK.LiquidMessageContentType : Swift.RawRepresentable {}
+extension LeapSDK.LiquidConstraintType : Swift.Equatable {}
+extension LeapSDK.LiquidConstraintType : Swift.Hashable {}
+extension LeapSDK.LiquidConstraintType : Swift.RawRepresentable {}
+extension LeapSDK.GenerationFinishReason : Swift.Equatable {}
+extension LeapSDK.GenerationFinishReason : Swift.Hashable {}

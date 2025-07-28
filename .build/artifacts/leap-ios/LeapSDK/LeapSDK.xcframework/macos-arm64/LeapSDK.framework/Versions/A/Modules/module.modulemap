@@ -1,0 +1,11 @@
+framework module LeapSDK {
+  umbrella header "LeapSDK.h"
+  export *
+
+  module * { export * }
+}
+
+module LeapSDK.Swift {
+  header "LeapSDK-Swift.h"
+  requires objc
+}

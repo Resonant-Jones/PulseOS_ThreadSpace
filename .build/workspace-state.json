@@ -1,0 +1,45 @@
+{
+  "object" : {
+    "artifacts" : [
+      {
+        "kind" : "xcframework",
+        "packageRef" : {
+          "identity" : "leap-ios",
+          "kind" : "remoteSourceControl",
+          "location" : "https://github.com/Liquid4All/leap-ios.git",
+          "name" : "LeapSDK"
+        },
+        "path" : "/Users/resonant_jones/Keep/Resonant_Constructs/PulseOS/PulseOS_ThreadSpace/.build/artifacts/leap-ios/LeapSDK/LeapSDK.xcframework",
+        "source" : {
+          "checksum" : "2ebc596c70d3d42651b8c6b200ed42a77fcb32eee5fbd4488b2efc4a633bab85",
+          "type" : "remote",
+          "url" : "https://github.com/Liquid4All/leap-ios/releases/download/v0.1.0/LeapSDK.xcframework.zip"
+        },
+        "targetName" : "LeapSDK"
+      }
+    ],
+    "dependencies" : [
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "leap-ios",
+          "kind" : "remoteSourceControl",
+          "location" : "https://github.com/Liquid4All/leap-ios.git",
+          "name" : "LeapSDK"
+        },
+        "state" : {
+          "checkoutState" : {
+            "revision" : "854d43699dd865cea4cf645150d299e4e218c645",
+            "version" : "0.1.0"
+          },
+          "name" : "sourceControlCheckout"
+        },
+        "subpath" : "leap-ios"
+      }
+    ],
+    "prebuilts" : [
+
+    ]
+  },
+  "version" : 7
+}
